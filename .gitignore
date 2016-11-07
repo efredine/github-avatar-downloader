@@ -46,5 +46,8 @@ jspm_packages
 # Yarn Integrity file
 .yarn-integrity
 
-#OSX Finder Information
+# OSX Finder Information
 .DS_Store
+
+# Environment variables
+*.env
