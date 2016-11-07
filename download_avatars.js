@@ -1,18 +1,17 @@
+require('dotenv').config();
 const request = require('request');
 const fs = require('fs');
 
-const GITHUB_USER = "efredine";
-const GITHUB_TOKEN = "63f30585505ab3b79fb77b07c7070483a0e9ab3e";
-
 /**
  * Retrieve a Github repo's contributors.
+ * Github user and token retrieved from process.env.
  * @param  {String} repoOwner name of the repositories owner
  * @param  {String} repoName name of the repository
  * @param  {Function} callback(error, result) is called on completion where result is a JSON object.
  * @return {undefined}
  */
 function getRepoContributors(repoOwner, repoName, callback) {
-  const requestURL = 'https://' + GITHUB_USER + ':' + GITHUB_TOKEN + '@api.github.com/repos/' + repoOwner + '/' + repoName + '/contributors';
+  const requestURL = 'https://' + process.env.GITHUB_USER + ':' + process.env.GITHUB_TOKEN + '@api.github.com/repos/' + repoOwner + '/' + repoName + '/contributors';
   const options = {
     url: requestURL,
     headers: {'User-Agent': 'github-avatar-downloader'}
