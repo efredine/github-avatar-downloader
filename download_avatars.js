@@ -74,4 +74,21 @@ function downloadContributorImages(error, contributors) {
     console.error("downloadContributorImages Error:\n", error);
   }
 }
-getRepoContributors(process.argv[2], process.argv[3], downloadContributorImages);
+/**
+ * Grab the two arguments or print an error.
+ * @param  {Array of String} to validate
+ * @return {Object} with repoName and repoOwner or null
+ */
+function getArguments(args) {
+  if(args.length !== 2) {
+    console.log("Needs two arguments: repoOwner repoName");
+    return null;
+  } else {
+    return {repoName: args[0], repoOwner: args[1]};
+  }
+}
+
+let repoArguments = getArguments(process.argv.slice(2));
+if (repoArguments) {
+  getRepoContributors(repoArguments.repoName, repoArguments.repoOwner, downloadContributorImages);
+}
