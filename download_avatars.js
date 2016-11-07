@@ -29,8 +29,14 @@ function getRepoContributors(repoOwner, repoName, callback) {
     }
   });
 }
-
+/**
+ * Downloads an image at the given url and streams it to the file in filePath.
+ * @param  {String} url of image to download
+ * @param  {String} filePath for storing downloaded image
+ * @return {undefined}
+ */
 function downloadImageByURL(url, filePath) {
+  const downloadInfo = `${url} to ${filePath}`;
   var length = 0;
   var byteCount = 0;
 
@@ -41,31 +47,31 @@ function downloadImageByURL(url, filePath) {
     })
     .on('response', function (response) {
       length = response.headers['content-length'];
-      console.log('Response Status Code: ', response.statusCode);
-      console.log('Response Status Message:', response.statusMessage);
-      console.log('Content type:', response.headers['content-type']);
       if(response.statusCode === 200) {
-        console.log("Dowloading", url, "to", filePath);
+        console.log(`Downloading ${url} (content-type: ${response.headers['content-type']}) to ${filePath}...`);
       }
     })
-    .on('data', function(chunk){
-      byteCount += chunk.length;
-      console.log(`${byteCount} of ${length}`);
-    })
     .on('end', function(){
-      console.log('Download complete.');
+      console.log(`>>> ${filePath} (${length} bytes) complete.`);
     })
     .pipe(fs.createWriteStream(filePath));
 }
-
-function downloadImages(error, result) {
-  if(!error && result) {
-    result.forEach(repoResult => {
-      let fileName = './avatars/' + repoResult['login'] + '.jpg';
-      downloadImageByURL(repoResult["avatar_url"], fileName);
+/**
+ * Download the avatar for each contributor and store it in a .avatars subdirectory.  Each file
+ * is named by appending .jpg to the users' login id.
+ * @param  {Object} null if ok, otherwise contains an error
+ * @param  {Array} of contributors to a repository
+ * @return {undefined}
+ */
+function downloadContributorImages(error, contributors) {
+  if(!error && contributors) {
+    contributors.forEach(contributor => {
+      let fileName = './avatars/' + contributor['login'] + '.jpg';
+      downloadImageByURL(contributor["avatar_url"], fileName);
     });
   }
+  if(error) {
+    console.error("downloadContributorImages Error:\n", error);
+  }
 }
-console.log('Welcome to the GitHub Avatar Downloader!');
-getRepoContributors(process.argv[2], process.argv[3], downloadImages);
-// downloadImageByURL('https://avatars.githubusercontent.com/u/1615?v=3', './tmp.jpg');
+getRepoContributors(process.argv[2], process.argv[3], downloadContributorImages);
