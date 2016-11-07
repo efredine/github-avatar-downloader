@@ -1,4 +1,6 @@
 const request = require('request');
+const fs = require('fs');
+
 const GITHUB_USER = "efredine";
 const GITHUB_TOKEN = "63f30585505ab3b79fb77b07c7070483a0e9ab3e";
 
@@ -28,6 +30,34 @@ function getRepoContributors(repoOwner, repoName, callback) {
   });
 }
 
+function downloadImageByURL(url, filePath) {
+  var length = 0;
+  var byteCount = 0;
+
+  request.get(url)
+    .on('error', function (err) {
+      console.error(err);
+      throw err;
+    })
+    .on('response', function (response) {
+      length = response.headers['content-length'];
+      console.log('Response Status Code: ', response.statusCode);
+      console.log('Response Status Message:', response.statusMessage);
+      console.log('Content type:', response.headers['content-type']);
+      if(response.statusCode === 200) {
+        console.log("Starting download...");
+      }
+    })
+    .on('data', function(chunk){
+      byteCount += chunk.length;
+      console.log(`${byteCount} of ${length}`);
+    })
+    .on('end', function(){
+      console.log('Download complete.');
+    })
+    .pipe(fs.createWriteStream(filePath));
+}
+
 console.log('Welcome to the GitHub Avatar Downloader!');
 function testCallBack(error, result) {
   console.log("error:", error);
@@ -37,4 +67,5 @@ function testCallBack(error, result) {
     });
   }
 }
-getRepoContributors(process.argv[2], process.argv[3], testCallBack);
+// getRepoContributors(process.argv[2], process.argv[3], testCallBack);
+downloadImageByURL('https://avatars.githubusercontent.com/u/1615?v=3', './tmp.jpg');
