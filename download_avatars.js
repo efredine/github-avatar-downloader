@@ -45,7 +45,7 @@ function downloadImageByURL(url, filePath) {
       console.log('Response Status Message:', response.statusMessage);
       console.log('Content type:', response.headers['content-type']);
       if(response.statusCode === 200) {
-        console.log("Starting download...");
+        console.log("Dowloading", url, "to", filePath);
       }
     })
     .on('data', function(chunk){
@@ -58,14 +58,14 @@ function downloadImageByURL(url, filePath) {
     .pipe(fs.createWriteStream(filePath));
 }
 
-console.log('Welcome to the GitHub Avatar Downloader!');
-function testCallBack(error, result) {
-  console.log("error:", error);
+function downloadImages(error, result) {
   if(!error && result) {
     result.forEach(repoResult => {
-      console.log(repoResult["avatar_url"]);
+      let fileName = './avatars/' + repoResult['login'] + '.jpg';
+      downloadImageByURL(repoResult["avatar_url"], fileName);
     });
   }
 }
-// getRepoContributors(process.argv[2], process.argv[3], testCallBack);
-downloadImageByURL('https://avatars.githubusercontent.com/u/1615?v=3', './tmp.jpg');
+console.log('Welcome to the GitHub Avatar Downloader!');
+getRepoContributors(process.argv[2], process.argv[3], downloadImages);
+// downloadImageByURL('https://avatars.githubusercontent.com/u/1615?v=3', './tmp.jpg');
