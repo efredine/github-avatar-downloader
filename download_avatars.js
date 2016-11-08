@@ -1,7 +1,7 @@
 require('dotenv').config();
 const fs = require('fs');
 const request = require('request');
-const getJSON = require('./getJSON.js');
+const getJSON = require('./get_json.js');
 
 function getHost() {
   return `https://${process.env.GITHUB_USER}:${process.env.GITHUB_TOKEN}@api.github.com`;
