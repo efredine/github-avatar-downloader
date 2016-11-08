@@ -1,19 +1,7 @@
-require('dotenv').config();
 const fs = require('fs');
 const request = require('request');
+const gitHubApi = require('./github_api.js');
 const getJSON = require('./get_json.js');
-
-function getHost() {
-  return `https://${process.env.GITHUB_USER}:${process.env.GITHUB_TOKEN}@api.github.com`;
-}
-
-function getOptions(path) {
-  return {url: getHost() + path, headers: {'User-Agent': 'github-avatar-downloader'}};
-}
-
-function getContributorsPath(repoOwner, repoName) {
-  return `/repos/${repoOwner}/${repoName}/contributors`;
-}
 
 /**
  * Retrieve a Github repo's contributors.
@@ -29,8 +17,8 @@ function getRepoContributors(repoOwner, repoName, callback) {
   //   url: requestURL,
   //   headers: {'User-Agent': 'github-avatar-downloader'}
   // };
-  let contributorsPath = getContributorsPath(repoOwner, repoName);
-  getJSON(getOptions(contributorsPath), callback);
+  let contributorsPath = gitHubApi.getContributorsPath(repoOwner, repoName);
+  getJSON(gitHubApi.getOptions(contributorsPath), callback);
 }
 /**
  * Downloads an image at the given url and streams it to the file in filePath.
