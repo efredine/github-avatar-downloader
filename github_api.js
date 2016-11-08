@@ -22,7 +22,12 @@ function getRoot() {
 function getOptions(path) {
   return {url: getRoot() + path, headers: {'User-Agent': 'github-avatar-downloader'}};
 }
-
+/**
+ * Retrieve repos for specified user.
+ * @param  {string} user
+ * @param  {Function} callback(error, result) is called on completion where result is a JSON object.
+ * @return {undefined}
+ */
 function getUserRepos(user, callback) {
   let userReposPath = `/users/${user}/repos`;
   return getJSON(getOptions(userReposPath), callback);

@@ -19,3 +19,11 @@ GITHUB_TOKEN=<token>
 This program should be executed from the command line, in the following manner:
 
 `node download_avatars.js jquery jquery`
+
+## Recommendations
+
+To get a list of recommendations based on the contributors to the project, run:
+
+`node recommend.js jquery jquery`
+
+This uses the same .env configuration as download_avatars.  The top five results are printed to the console.

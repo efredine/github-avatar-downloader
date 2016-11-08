@@ -4,6 +4,10 @@ const getArguments = require('./get_arguments');
 var repoSummaries = [];
 var pendingQueries = 0;
 
+/**
+ * Process the accumulated repo star counts by sorting them and then printing out the 5 top recommendations.
+ * @return {none}
+ */
 function processRepoSummaries() {
   repoSummaries.sort(function(a, b) {
     return b.stars - a.stars;
@@ -13,9 +17,15 @@ function processRepoSummaries() {
   });
 }
 
+/**
+ * Retrieve the repos for the specified contributor and extract the stargazer count
+ * for each repo.  Once a response is processed decrement the number of pending
+ * queries.  When the pending queries reaches 0, process the final results.
+ * @param  {string} user name
+ * @return {undefined}
+ */
 function getUserRepos(user) {
   gitHubApi.getUserRepos(user, function(error, repos) {
-    // console.log(user, '------------------------------------');
     let summary = repos.map(repo => {
       return {user: user, stars: repo.stargazers_count, name: repo.name, fullName: repo.full_name};
     });
@@ -27,6 +37,13 @@ function getUserRepos(user) {
   });
 }
 
+/**
+ * For each user in the list of contributors initate a query to get that user's repos.  Keep track
+ * of the number of outstanding queries, by incrementing a counter each time a query is initiated.
+ * @param  {Object} error if one occurs
+ * @param  {Object} contributors as an array of objects listing the contributors
+ * @return {undefined}
+ */
 function getContributors(error, contributors) {
   if(!error && contributors) {
     contributors.forEach(contributor => {
