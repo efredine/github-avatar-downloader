@@ -1,20 +1,7 @@
 require('dotenv').config();
-const request = require('request');
 const fs = require('fs');
-
-function getJSON(options, callback) {
-  console.log(options.url);
-  request.get(options, (error, response, body) => {
-    console.log("Error:", error);
-    console.log('Response Status Code: ', response.statusCode);
-    console.log('Response Status Message:', response.statusMessage);
-    if(!error && response.statusCode === 200) {
-      callback(error, JSON.parse(body));
-    } else {
-      callback(error, null);
-    }
-  });
-}
+const request = require('request');
+const getJSON = require('./getJSON.js');
 
 function getHost() {
   return `https://${process.env.GITHUB_USER}:${process.env.GITHUB_TOKEN}@api.github.com`;
