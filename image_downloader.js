@@ -25,6 +25,10 @@ function downloadImageByURL(url, filePath) {
     .on('end', function(){
       console.log(`>>> ${filePath} (${length} bytes) complete.`);
     })
-    .pipe(fs.createWriteStream(filePath));
+    .pipe(fs.createWriteStream(filePath))
+    .on('error', function (error) {
+      console.error(error);
+      throw error;
+    });
 }
 module.exports.downloadImageByURL = downloadImageByURL;
