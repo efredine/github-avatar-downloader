@@ -1,9 +1,9 @@
-require('dotenv').config();
+require('dotenv').config({silent: true});
 const user = process.env.GITHUB_USER;
 const token = process.env.GITHUB_TOKEN;
 
 if(!user || !token) {
-  throw new Error("You have to configure GITHUB_USER and GITHUB_TOKEN");
+  throw new Error("You have to configure GITHUB_USER and GITHUB_TOKEN in a .env file.");
 }
 
 /**
