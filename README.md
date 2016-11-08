@@ -4,6 +4,8 @@
 
 Given a GitHub repository name and owner, download all the contributors' profile images and save them to a subdirectory, `avatars/`.
 
+If the avatars subdirectory doesn't exist it is created.
+
 ## Configuration
 
 A .env configuration file is required with the following defined:

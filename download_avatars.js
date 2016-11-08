@@ -1,6 +1,8 @@
+const fs = require('fs');
 const downloadImageByURL = require('./image_downloader').downloadImageByURL;
 const gitHubApi = require('./github_api');
 const getJSON = require('./get_json');
+const SUBDIR = './avatars';
 
 /**
  * Retrieve a Github repo's contributors.
@@ -14,17 +16,26 @@ function getRepoContributors(repoOwner, repoName, callback) {
   let contributorsPath = gitHubApi.getContributorsPath(repoOwner, repoName);
   getJSON(gitHubApi.getOptions(contributorsPath), callback);
 }
+
 /**
- * Download the avatar for each contributor and store it in a .avatars subdirectory.  Each file
- * is named by appending .jpg to the users' login id.
+ * Download the avatar for each contributor and store it in a .avatars subdirectory.
+ * If the sub-directory doesn't exist, attempts to create it (which might fail with an error).
+ * Each file is named by appending .jpg to the users' login id.
  * @param  {Object} null if ok, otherwise contains an error
  * @param  {Array} of contributors to a repository
  * @return {undefined}
  */
 function downloadContributorImages(error, contributors) {
   if(!error && contributors) {
+    try {
+      fs.mkdirSync(SUBDIR);
+    } catch(error) {
+      if(!error.code === "EEXIST") {
+        throw error;
+      }
+    }
     contributors.forEach(contributor => {
-      let fileName = './avatars/' + contributor['login'] + '.jpg';
+      let fileName = SUBDIR + '/' + contributor['login'] + '.jpg';
       downloadImageByURL(contributor["avatar_url"], fileName);
     });
   }
