@@ -1,4 +1,5 @@
 require('dotenv').config({silent: true});
+const getJSON = require('./get_json');
 const user = process.env.GITHUB_USER;
 const token = process.env.GITHUB_TOKEN;
 
@@ -10,7 +11,7 @@ if(!user || !token) {
  * Returns the base URL for github with user and token configured.
  * @return {String}
  */
-function getHost() {
+function getRoot() {
   return `https://${user}:${token}@api.github.com`;
 }
 
@@ -19,7 +20,7 @@ function getHost() {
  * @return {Object} options object configured with user-agent and github URL.
  */
 function getOptions(path) {
-  return {url: getHost() + path, headers: {'User-Agent': 'github-avatar-downloader'}};
+  return {url: getRoot() + path, headers: {'User-Agent': 'github-avatar-downloader'}};
 }
 
 /**
@@ -31,6 +32,18 @@ function getContributorsPath(repoOwner, repoName) {
   return `/repos/${repoOwner}/${repoName}/contributors`;
 }
 
-module.exports.getHost = getHost;
+/**
+ * Retrieve a Github repo's contributors.
+ * Github user and token retrieved from process.env.
+ * @param  {String} repoOwner name of the repositories owner
+ * @param  {String} repoName name of the repository
+ * @param  {Function} callback(error, result) is called on completion where result is a JSON object.
+ * @return {undefined}
+ */
+function getRepoContributors(repoOwner, repoName, callback) {
+  let contributorsPath = getContributorsPath(repoOwner, repoName);
+  getJSON(getOptions(contributorsPath), callback);
+}
+
 module.exports.getOptions = getOptions;
-module.exports.getContributorsPath = getContributorsPath;
+module.exports.getRepoContributors = getRepoContributors;

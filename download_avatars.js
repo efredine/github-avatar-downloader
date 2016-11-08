@@ -1,21 +1,7 @@
 const fs = require('fs');
 const downloadImageByURL = require('./image_downloader').downloadImageByURL;
 const gitHubApi = require('./github_api');
-const getJSON = require('./get_json');
 const SUBDIR = './avatars';
-
-/**
- * Retrieve a Github repo's contributors.
- * Github user and token retrieved from process.env.
- * @param  {String} repoOwner name of the repositories owner
- * @param  {String} repoName name of the repository
- * @param  {Function} callback(error, result) is called on completion where result is a JSON object.
- * @return {undefined}
- */
-function getRepoContributors(repoOwner, repoName, callback) {
-  let contributorsPath = gitHubApi.getContributorsPath(repoOwner, repoName);
-  getJSON(gitHubApi.getOptions(contributorsPath), callback);
-}
 
 /**
  * Download the avatar for each contributor and store it in a .avatars subdirectory.
@@ -59,5 +45,5 @@ function getArguments(args) {
 
 let repoArguments = getArguments(process.argv.slice(2));
 if (repoArguments) {
-  getRepoContributors(repoArguments.repoName, repoArguments.repoOwner, downloadContributorImages);
+  gitHubApi.getRepoContributors(repoArguments.repoName, repoArguments.repoOwner, downloadContributorImages);
 }
