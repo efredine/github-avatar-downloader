@@ -16,6 +16,18 @@ function getJSON(options, callback) {
   });
 }
 
+function getHost() {
+  return `https://${process.env.GITHUB_USER}:${process.env.GITHUB_TOKEN}@api.github.com`;
+}
+
+function getOptions(path) {
+  return {url: getHost() + path, headers: {'User-Agent': 'github-avatar-downloader'}};
+}
+
+function getContributorsPath(repoOwner, repoName) {
+  return `/repos/${repoOwner}/${repoName}/contributors`;
+}
+
 /**
  * Retrieve a Github repo's contributors.
  * Github user and token retrieved from process.env.
@@ -25,12 +37,13 @@ function getJSON(options, callback) {
  * @return {undefined}
  */
 function getRepoContributors(repoOwner, repoName, callback) {
-  const requestURL = 'https://' + process.env.GITHUB_USER + ':' + process.env.GITHUB_TOKEN + '@api.github.com/repos/' + repoOwner + '/' + repoName + '/contributors';
-  const options = {
-    url: requestURL,
-    headers: {'User-Agent': 'github-avatar-downloader'}
-  };
-  getJSON(options, callback);
+  // const requestURL = 'https://' + process.env.GITHUB_USER + ':' + process.env.GITHUB_TOKEN + '@api.github.com/repos/' + repoOwner + '/' + repoName + '/contributors';
+  // const options = {
+  //   url: requestURL,
+  //   headers: {'User-Agent': 'github-avatar-downloader'}
+  // };
+  let contributorsPath = getContributorsPath(repoOwner, repoName);
+  getJSON(getOptions(contributorsPath), callback);
 }
 /**
  * Downloads an image at the given url and streams it to the file in filePath.
