@@ -2,6 +2,20 @@ require('dotenv').config();
 const request = require('request');
 const fs = require('fs');
 
+function getJSON(options, callback) {
+  console.log(options.url);
+  request.get(options, (error, response, body) => {
+    console.log("Error:", error);
+    console.log('Response Status Code: ', response.statusCode);
+    console.log('Response Status Message:', response.statusMessage);
+    if(!error && response.statusCode === 200) {
+      callback(error, JSON.parse(body));
+    } else {
+      callback(error, null);
+    }
+  });
+}
+
 /**
  * Retrieve a Github repo's contributors.
  * Github user and token retrieved from process.env.
@@ -16,17 +30,7 @@ function getRepoContributors(repoOwner, repoName, callback) {
     url: requestURL,
     headers: {'User-Agent': 'github-avatar-downloader'}
   };
-  console.log(requestURL);
-  request.get(options, (error, response, body) => {
-    console.log("Error:", error);
-    console.log('Response Status Code: ', response.statusCode);
-    console.log('Response Status Message:', response.statusMessage);
-    if(!error && response.statusCode === 200) {
-      callback(error, JSON.parse(body));
-    } else {
-      callback(error, null);
-    }
-  });
+  getJSON(options, callback);
 }
 /**
  * Downloads an image at the given url and streams it to the file in filePath.
