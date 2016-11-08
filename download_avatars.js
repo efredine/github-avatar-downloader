@@ -11,11 +11,6 @@ const getJSON = require('./get_json');
  * @return {undefined}
  */
 function getRepoContributors(repoOwner, repoName, callback) {
-  // const requestURL = 'https://' + process.env.GITHUB_USER + ':' + process.env.GITHUB_TOKEN + '@api.github.com/repos/' + repoOwner + '/' + repoName + '/contributors';
-  // const options = {
-  //   url: requestURL,
-  //   headers: {'User-Agent': 'github-avatar-downloader'}
-  // };
   let contributorsPath = gitHubApi.getContributorsPath(repoOwner, repoName);
   getJSON(gitHubApi.getOptions(contributorsPath), callback);
 }
