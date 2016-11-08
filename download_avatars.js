@@ -1,6 +1,7 @@
 const fs = require('fs');
 const downloadImageByURL = require('./image_downloader').downloadImageByURL;
 const gitHubApi = require('./github_api');
+const getArguments = require('./get_arguments');
 const SUBDIR = './avatars';
 
 /**
@@ -27,19 +28,6 @@ function downloadContributorImages(error, contributors) {
   }
   if(error) {
     console.error("downloadContributorImages Error:\n", error);
-  }
-}
-/**
- * Grab the two arguments or print an error.
- * @param  {Array of String} to validate
- * @return {Object} with repoName and repoOwner or null
- */
-function getArguments(args) {
-  if(args.length !== 2) {
-    console.log("Needs two arguments: repoOwner repoName");
-    return null;
-  } else {
-    return {repoName: args[0], repoOwner: args[1]};
   }
 }
 
