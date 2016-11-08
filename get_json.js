@@ -5,8 +5,11 @@ module.exports = function getJSON(options, callback) {
     if(!error && response.statusCode === 200) {
       callback(error, JSON.parse(body));
     } else {
+      console.error(error);
       console.log(options.url);
-      console.log(response.statusCode, response.statusMessage);
+      if(response) {
+        console.log(response.statusCode, response.statusMessage);
+      }
       console.log(body);
       callback(error, null);
     }

@@ -23,13 +23,9 @@ function getOptions(path) {
   return {url: getRoot() + path, headers: {'User-Agent': 'github-avatar-downloader'}};
 }
 
-/**
- * @param  {String} user id of repo owner
- * @param  {String} name of the repo
- * @return {String} path for contirbutors to the repo
- */
-function getContributorsPath(repoOwner, repoName) {
-  return `/repos/${repoOwner}/${repoName}/contributors`;
+function getUserRepos(user, callback) {
+  let userReposPath = `/users/${user}/repos`;
+  return getJSON(getOptions(userReposPath), callback);
 }
 
 /**
@@ -41,9 +37,10 @@ function getContributorsPath(repoOwner, repoName) {
  * @return {undefined}
  */
 function getRepoContributors(repoOwner, repoName, callback) {
-  let contributorsPath = getContributorsPath(repoOwner, repoName);
-  getJSON(getOptions(contributorsPath), callback);
+  let contributorsPath = `/repos/${repoOwner}/${repoName}/contributors`;
+  return getJSON(getOptions(contributorsPath), callback);
 }
 
 module.exports.getOptions = getOptions;
 module.exports.getRepoContributors = getRepoContributors;
+module.exports.getUserRepos = getUserRepos;
